@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Index</title>
+    <link rel="stylesheet" href="jquery (1)/jquery/jquery-ui.css">
+    <script src="jquery (1)/jquery/jquery.js"></script>
+    <script src="jquery (1)/jquery/jquery-ui.js"></script>
+
+    <style>
+        ul{
+            list-style-type: none;
+        }
+        #nav li{
+            display: inline-block;
+            width: 100px;
+            border: black 1px solid;
+            padding: 10px;
+        }
+
+    </style>
+    <script>
+        $(document).ready(function (){
+            $("#details").hide()
+            $("#nav li").click(function (){
+                var id=$(this).attr("id")
+                getItems(id)
+                $("#znamenitosti").html("")
+            })
+            function getItems(id){
+              $.ajax({
+                  url:"https://citylandmarks.herokuapp.com/location/"+id,
+                  dataType:"json",
+                  success:function (data){
+                      $.each(data.objects.available.landmarks,function (i,item){
+                          //console.log(item.name)
+                          var el=$("<li>")
+                          var name=item.name
+                          var addr=item.address
+                          var price=item.ticket_price
+                          var h=item.business_hours
+                          var url=item.url
+                          var img=item.photo_url
+                          el.html(name)
+                          el.attr("addr",addr)
+                          el.attr("price",price)
+                          el.attr("h",h)
+                          el.attr("url",url)
+                          el.attr("img",img)
+                          el.appendTo("#znamenitosti")
+                      })
+                  }
+              })
+            }
+            $(document).on("click", "#znamenitosti li",function (){
+                $("#details").html("Address: "+$(this).attr("addr")+"<br> Ticket price: "+$(this).attr("price")+"<br> Business hours: "+$(this).attr("h")+"<br> Link: "+$(this).attr("url")+"<br><button class=\"back\">Back</button>")//+"<br> "//<img src='"+$(this).attr("img")+'">)")
+                $("#znamenitosti").hide()
+                $("#details").show()
+            })
+            $(document).on("click",".back",function (){
+                $("#znamenitosti").show()
+                $("#details").hide()
+            })
+        })
+    </script>
+</head>
+<body>
+<ul id="nav">
+    <li id="pa192">Paris</li>
+    <li id="ch7956">Chicago</li>
+    <li id="at5702">Athens</li>
+    <li id="am22265">Amsterdam</li>
+</ul>
+<ul id="znamenitosti">
+
+</ul>
+<div id="details">
+    <button id="back">Back</button>
+</div>
+<div id="socialLinks">
+    <a href="https://www.facebook.com/"><img src="images/facebook.png"></a>
+    <a href="https://www.linkedin.com/"><img src="images/linkedin.png"></a>
+    <a href="#"><img src="images/delicious.png"></a>
+    <a href="#"><img src="images/digg.png"></a>
+    <a href="#"><img src="images/flickr.png"></a>
+    <a href="https://www.linkedin.com/"><img src="images/reddit.png"></a>
+    <a href="#"><img src="images/rss.png"></a>
+    <a href="https://twitter.com"><img src="images/twitter.png">/</a>
+</div>
+
+</body>
+</html>
